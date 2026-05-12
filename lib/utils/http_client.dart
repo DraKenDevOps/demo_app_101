@@ -1,4 +1,5 @@
 import "dart:async" show TimeoutException;
+import "package:flutter/foundation.dart";
 import "package:http/http.dart" as http;
 import "dart:convert";
 import "dart:io";
@@ -24,21 +25,13 @@ class HttpClient {
     required String baseUrl,
     Map<String, String>? customHeaders,
     Duration timeout = const Duration(seconds: 30),
-    // String? token,
   }) {
     _baseUrl = baseUrl;
     _timeout = timeout;
     _initializeDefaultHeaders();
-
-    // if (token != null && token.isNotEmpty) {
-    //   _defaultHeaders["Authorization"] = "Bearer $token";
-    // }
-
     if (customHeaders != null) {
       _defaultHeaders.addAll(customHeaders);
     }
-
-    // print("HttpClient initialized with base URL: $_baseUrl");
   }
 
   void _initializeDefaultHeaders() {
@@ -148,11 +141,12 @@ class HttpClient {
   }
 
   Map<String, dynamic> _handleResponse(http.Response response) {
+    if (kDebugMode) debugPrint("Http client handle response: ${response.body}");
     if (response.statusCode == 200 || response.statusCode == 201 || response.statusCode == 204) {
       if (response.body.isEmpty) {
         return {"status": "success", "data": null};
       }
-      return {"status": "success", "data": jsonDecode(response.body), "statusCode": response.statusCode};
+      return jsonDecode(response.body);
     }
 
     if (response.statusCode == 401) {

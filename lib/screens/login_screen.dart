@@ -1,8 +1,8 @@
-import "dart:convert";
-import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
 
-import "package:demo_app_101/widgets/theme_toggle.dart";
+import "../services/storage_service.dart";
+import "../services/auth_service.dart";
+import "../widgets/theme_toggle.dart";
 
 class LoginScreen extends StatefulWidget {
   final bool isDarkMode;
@@ -19,20 +19,27 @@ class _LoginScreenState extends State<LoginScreen> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
+  final auth = AuthService();
+  final storage = StorageService();
 
-  @override
-  void dispose() {
-    _usernameController.dispose();
-    _passwordController.dispose();
-    super.dispose();
-  }
-
-  void _login() {
+  Future<void> _login() async {
     if (_formKey.currentState!.validate()) {
-      // Navigator.pushReplacementNamed(context, "/");
-      Map<String, dynamic> formData = {"username": _usernameController.text, "password": _passwordController.text};
-      String data = json.encode(formData);
-      if (kDebugMode) debugPrint("Success $data");
+      Map<String, dynamic> formData = {
+        "username": _usernameController.text,
+        "password": _passwordController.text,
+        "expiresIn": 60000,
+      };
+
+      final response = await auth.login(formData);
+      if (response["status"] == "success" || response["status"] == "ok") {
+        await StorageService.saveToken(response["accessToken"]);
+        await StorageService.saveData("user_data", response["user"]);
+        if (!mounted) return;
+        Navigator.of(context).pushReplacementNamed("/");
+      } else {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(response["message"] ?? "Login failed")));
+      }
     }
   }
 
@@ -107,5 +114,12 @@ class _LoginScreenState extends State<LoginScreen> {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 }

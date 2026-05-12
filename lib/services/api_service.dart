@@ -1,20 +1,18 @@
-import "package:demo_app_101/config.dart";
 import "package:demo_app_101/utils/http_client.dart";
-import "./storage_service.dart";
-
-Future<void> main() async {
-  HttpClient().initialize(baseUrl: "${AppConfig.API_BASE_URL}/api");
-  String? token = await StorageService.getToken();
-  if (token!.isNotEmpty) {
-    HttpClient().addHeader("Authorization", "Bearer $token");
-  }
-}
 
 class ApiService {
   final _http = HttpClient();
-  Future<Map<String, dynamic>> listTravelSite(String? text) async {
+  Future<Map<String, dynamic>> listTravelSite(String? text, int? page, int? limit, String? sort) async {
+    Map<String, dynamic> qs = {};
+    if (text != null && text.isNotEmpty) qs["search"] = text;
+    if (page != null && !page.isNaN) qs["page"] = page;
+    if (limit != null && !limit.isNaN) qs["limit"] = limit;
+    if (sort != null && sort.isNotEmpty) qs["sort"] = sort;
     try {
-      final response = await _http.get("/attractions", queryParams: {"search": text});
+      final response = await _http.get(
+        "/attractions",
+        queryParams: qs,
+      );
       return response;
     } catch (err) {
       rethrow;
@@ -59,7 +57,7 @@ class ApiService {
 
   Future<Map<String, dynamic>> deleteTravelSite(String id) async {
     try {
-      final response = await _http.delete("/auth/attractions", { "id": id }, null);
+      final response = await _http.delete("/auth/attractions", {"id": id}, null);
       return response;
     } catch (err) {
       rethrow;

@@ -1,21 +1,13 @@
+import "package:demo_app_101/utils/http_client.dart";
+
 class AuthService {
-  Future<bool> login(String email, String password) async {
-    // TODO: Implement login logic
-    throw UnimplementedError();
-  }
-
-  Future<void> logout() async {
-    // TODO: Implement logout logic
-    throw UnimplementedError();
-  }
-
-  Future<bool> register(String email, String password, String name) async {
-    // TODO: Implement register logic
-    throw UnimplementedError();
-  }
-
-  Future<bool> isLoggedIn() async {
-    // TODO: Implement check login status
-    throw UnimplementedError();
+  final _http = HttpClient();
+  Future<Map<String, dynamic>> login(Map<String, dynamic> data) async {
+    try {
+      final response = await _http.post("/login", data, null);
+      return response;
+    } catch (err) {
+      rethrow;
+    }
   }
 }

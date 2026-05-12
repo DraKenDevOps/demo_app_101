@@ -26,6 +26,7 @@ linter:
     prefer_double_quotes: true
     lines_longer_than_80_chars: false
     constant_identifier_names: false
+    non_constant_identifier_names: false
     # indent_size_4: true
 
 

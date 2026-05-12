@@ -5,8 +5,16 @@ import "screens/home_screen.dart";
 import "screens/login_screen.dart";
 import "screens/profile_screen.dart";
 import "screens/settings_screen.dart";
+import "config.dart";
+import "utils/http_client.dart";
+import "services/storage_service.dart";
 
-void main() {
+void main() async {
+  HttpClient().initialize(baseUrl: AppConfig.API_BASE_URL);
+  String? token = await StorageService.getToken();
+  if (token != null && token.isNotEmpty) {
+    HttpClient().addHeader("Authorization", "Bearer $token");
+  }
   runApp(const MyApp());
 }
 
