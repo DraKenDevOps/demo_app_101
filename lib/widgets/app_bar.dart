@@ -22,18 +22,19 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     Navigator.of(context).pushReplacementNamed("/login");
   }
 
-  void _openDrawer(BuildContext context) {
-    Scaffold.of(context).openDrawer();
-  }
+  // void _openDrawer(BuildContext context) {
+  //   Scaffold.of(context).openDrawer();
+  // }
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      leading: IconButton(
-        icon: const Icon(Icons.menu),
-        onPressed: () => _openDrawer(context),
-        tooltip: "Menu",
-      ),
+      automaticallyImplyLeading: false,
+      // leading: IconButton(
+      //   icon: const Icon(Icons.menu),
+      //   onPressed: () => _openDrawer(context),
+      //   tooltip: "Menu",
+      // ),
       title: Text(title),
       actions: [
         ...?actions,

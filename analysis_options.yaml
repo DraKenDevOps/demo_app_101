@@ -27,6 +27,7 @@ linter:
     lines_longer_than_80_chars: false
     constant_identifier_names: false
     non_constant_identifier_names: false
+    require_trailing_commas: false
     # indent_size_4: true
 
 

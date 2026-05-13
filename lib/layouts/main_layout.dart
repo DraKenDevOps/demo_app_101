@@ -4,7 +4,7 @@ import "../screens/home_screen.dart";
 import "../screens/profile_screen.dart";
 import "../screens/settings_screen.dart";
 import "../widgets/app_bar.dart";
-import "../services/auth_service.dart";
+// import "../services/auth_service.dart";
 
 class MainLayout extends StatefulWidget {
   final bool isDarkMode;
@@ -32,10 +32,10 @@ class _MainLayoutState extends State<MainLayout> {
     ]);
   }
 
-  void _logout() {
-    AuthService().logout();
-    Navigator.of(context).pushReplacementNamed("/login");
-  }
+  // void _logout() {
+  //   AuthService().logout();
+  //   Navigator.of(context).pushReplacementNamed("/login");
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -45,64 +45,64 @@ class _MainLayoutState extends State<MainLayout> {
         isDarkMode: widget.isDarkMode,
         onToggleTheme: widget.onToggleTheme,
       ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary,
-              ),
-              child: const Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  CircleAvatar(
-                    radius: 30,
-                    backgroundColor: Colors.white,
-                    child: Icon(Icons.person, size: 40),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    "Demo App",
-                    style: TextStyle(color: Colors.white, fontSize: 18),
-                  ),
-                ],
-              ),
-            ),
-            ListTile(
-              leading: const Icon(Icons.home),
-              title: const Text("Home"),
-              onTap: () {
-                setState(() => _currentIndex = 0);
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.person),
-              title: const Text("Profile"),
-              onTap: () {
-                setState(() => _currentIndex = 1);
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.settings),
-              title: const Text("Settings"),
-              onTap: () {
-                setState(() => _currentIndex = 2);
-                Navigator.pop(context);
-              },
-            ),
-            const Divider(),
-            ListTile(
-              leading: const Icon(Icons.logout),
-              title: const Text("Logout"),
-              onTap: _logout,
-            ),
-          ],
-        ),
-      ),
+      // drawer: Drawer(
+      //   child: ListView(
+      //     padding: EdgeInsets.zero,
+      //     children: [
+      //       DrawerHeader(
+      //         decoration: BoxDecoration(
+      //           color: Theme.of(context).colorScheme.primary,
+      //         ),
+      //         child: const Column(
+      //           crossAxisAlignment: CrossAxisAlignment.start,
+      //           mainAxisAlignment: MainAxisAlignment.end,
+      //           children: [
+      //             CircleAvatar(
+      //               radius: 30,
+      //               backgroundColor: Colors.white,
+      //               child: Icon(Icons.person, size: 40),
+      //             ),
+      //             SizedBox(height: 8),
+      //             Text(
+      //               "Demo App",
+      //               style: TextStyle(color: Colors.white, fontSize: 18),
+      //             ),
+      //           ],
+      //         ),
+      //       ),
+      //       ListTile(
+      //         leading: const Icon(Icons.home),
+      //         title: const Text("Home"),
+      //         onTap: () {
+      //           setState(() => _currentIndex = 0);
+      //           Navigator.pop(context);
+      //         },
+      //       ),
+      //       ListTile(
+      //         leading: const Icon(Icons.person),
+      //         title: const Text("Profile"),
+      //         onTap: () {
+      //           setState(() => _currentIndex = 1);
+      //           Navigator.pop(context);
+      //         },
+      //       ),
+      //       ListTile(
+      //         leading: const Icon(Icons.settings),
+      //         title: const Text("Settings"),
+      //         onTap: () {
+      //           setState(() => _currentIndex = 2);
+      //           Navigator.pop(context);
+      //         },
+      //       ),
+      //       const Divider(),
+      //       ListTile(
+      //         leading: const Icon(Icons.logout),
+      //         title: const Text("Logout"),
+      //         onTap: _logout,
+      //       ),
+      //     ],
+      //   ),
+      // ),
       body: IndexedStack(
         index: _currentIndex,
         children: _screens,
