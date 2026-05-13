@@ -19,8 +19,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
-  final auth = AuthService();
-  final storage = StorageService();
+  AuthService auth = AuthService();
+  StorageService storage = StorageService();
 
   Future<void> _login() async {
     if (_formKey.currentState!.validate()) {
@@ -30,9 +30,9 @@ class _LoginScreenState extends State<LoginScreen> {
         "expiresIn": 60000,
       };
 
-      final response = await auth.login(formData);
+      Map<String, dynamic> response = await auth.login(formData);
       if (response["status"] == "success" || response["status"] == "ok") {
-        await StorageService.saveToken(response["accessToken"]);
+        await StorageService.saveAccessToken(response["accessToken"]);
         await StorageService.saveData("user_data", response["user"]);
         if (!mounted) return;
         Navigator.of(context).pushReplacementNamed("/");
@@ -65,9 +65,15 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(height: 32),
                   TextFormField(
                     controller: _usernameController,
-                    decoration: const InputDecoration(
+                    // autofocus: true,
+                    decoration: InputDecoration(
                       labelText: "Username",
-                      border: OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                        // borderRadius: BorderRadius.circular(24.0)
+                      ),
+                      // enabledBorder: OutlineInputBorder(
+                      //   borderRadius: BorderRadius.circular(24.0)
+                      // ),
                       prefixIcon: Icon(Icons.person),
                     ),
                     validator: (value) {
@@ -83,7 +89,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     obscureText: _obscurePassword,
                     decoration: InputDecoration(
                       labelText: "Password",
-                      border: const OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                        // borderRadius: BorderRadius.circular(24.0)
+                      ),
+                      // enabledBorder: OutlineInputBorder(
+                      //   borderRadius: BorderRadius.circular(24.0)
+                      // ),
                       prefixIcon: const Icon(Icons.lock),
                       suffixIcon: IconButton(
                         icon: Icon(_obscurePassword ? Icons.visibility : Icons.visibility_off),
@@ -105,7 +116,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   SizedBox(
                     width: double.infinity,
                     height: 48,
-                    child: ElevatedButton(onPressed: _login, child: const Text("LOGIN")),
+                    child: FilledButton(
+                      onPressed: _login,
+                      style: FilledButton.styleFrom(
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      ),
+                      child: Text("LOGIN"),
+                    ),
                   ),
                 ],
               ),

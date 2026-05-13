@@ -1,17 +1,11 @@
-// import "dart:convert";
-// import "dart:nativewrappers/_internal/vm/lib/developer.dart";
-
 import "dart:convert";
-
-import "package:flutter_secure_storage/flutter_secure_storage.dart";
 import "package:flutter/foundation.dart";
+import "package:flutter_secure_storage/flutter_secure_storage.dart";
+
+import "../config.dart";
 
 class StorageService {
   static const _secureStorage = FlutterSecureStorage();
-
-  static const String _tokenKey = "jwt_token";
-  static const String _refreshTokenKey = "refresh_token";
-  static const String _userKey = "user_data";
 
   static Future<void> saveData(String key, dynamic data) async {
     try {
@@ -19,6 +13,7 @@ class StorageService {
       if (data is! String) value = data.toString();
       if (data is Object) value = json.encode(data);
       await _secureStorage.write(key: key, value: value);
+      viewStorage();
     } catch (e) {
       if (kDebugMode) debugPrint("✗ Error saving $key: $e");
     }
@@ -40,7 +35,7 @@ class StorageService {
       if (kDebugMode) debugPrint("✗ Error deleting $key: $e");
     }
   }
-  
+
   static Future<void> clearData() async {
     try {
       await _secureStorage.deleteAll();
@@ -49,9 +44,9 @@ class StorageService {
     }
   }
 
-  static Future<void> saveToken(String token) async {
+  static Future<void> saveAccessToken(String token) async {
     try {
-      await _secureStorage.write(key: _tokenKey, value: token);
+      await _secureStorage.write(key: AppConfig.ACCESS_TOKEN_KEY, value: token);
     } catch (e) {
       if (kDebugMode) debugPrint("✗ Error saving token: $e");
     }
@@ -59,7 +54,7 @@ class StorageService {
 
   static Future<void> saveRefreshToken(String refreshToken) async {
     try {
-      await _secureStorage.write(key: _refreshTokenKey, value: refreshToken);
+      await _secureStorage.write(key: AppConfig.REFRESH_TOKEN_KEY, value: refreshToken);
     } catch (e) {
       if (kDebugMode) debugPrint("✗ Error saving refresh token: $e");
     }
@@ -67,7 +62,7 @@ class StorageService {
 
   static Future<String?> getToken() async {
     try {
-      return await _secureStorage.read(key: _tokenKey);
+      return await _secureStorage.read(key: AppConfig.ACCESS_TOKEN_KEY);
     } catch (e) {
       if (kDebugMode) debugPrint("✗ Error reading token: $e");
       return null;
@@ -76,7 +71,7 @@ class StorageService {
 
   static Future<String?> getRefreshToken() async {
     try {
-      return await _secureStorage.read(key: _refreshTokenKey);
+      return await _secureStorage.read(key: AppConfig.REFRESH_TOKEN_KEY);
     } catch (e) {
       if (kDebugMode) debugPrint("✗ Error reading refresh token: $e");
       return null;
@@ -90,12 +85,31 @@ class StorageService {
 
   static Future<void> deleteToken() async {
     try {
-      await _secureStorage.delete(key: _tokenKey);
-      await _secureStorage.delete(key: _refreshTokenKey);
-      await _secureStorage.delete(key: _userKey);
+      await _secureStorage.delete(key: AppConfig.ACCESS_TOKEN_KEY);
+      await _secureStorage.delete(key: AppConfig.REFRESH_TOKEN_KEY);
+      await _secureStorage.delete(key: AppConfig.USER_KEY);
     } catch (e) {
       if (kDebugMode) debugPrint("✗ Error deleting token(s): $e");
       // log(e.toString());
+    }
+  }
+
+  static Future<Map<String, String>> getAllData() async {
+    try {
+      return await _secureStorage.readAll();
+    } catch (e) {
+      if (kDebugMode) debugPrint("✗ Error get all data: $e");
+      return {};
+    }
+  }
+
+  static void viewStorage() {
+    if (kDebugMode) {
+      StorageService.getAllData().then((values) {
+        values.forEach((key, value) {
+          debugPrint("Key: $key, Value: $value");
+        });
+      });
     }
   }
 }

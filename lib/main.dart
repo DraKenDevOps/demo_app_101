@@ -1,13 +1,10 @@
 import "package:flutter/material.dart";
 
 import "theme.dart";
-import "screens/home_screen.dart";
-import "screens/login_screen.dart";
-import "screens/profile_screen.dart";
-import "screens/settings_screen.dart";
 import "config.dart";
 import "utils/http_client.dart";
 import "services/storage_service.dart";
+import "routes.dart";
 
 void main() async {
   HttpClient().initialize(baseUrl: AppConfig.API_BASE_URL);
@@ -28,7 +25,23 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   bool _isDarkMode = false;
 
+  @override
+  void initState() {
+    super.initState();
+    _loadTheme();
+  }
+
+  Future<void> _loadTheme() async {
+    final theme = await StorageService.getData(AppConfig.APP_THEME_KEY);
+    if (mounted) {
+      setState(() {
+        _isDarkMode = theme == "dark";
+      });
+    }
+  }
+
   void _toggleTheme() {
+    StorageService.saveData(AppConfig.APP_THEME_KEY, _isDarkMode ? "dark" : "light");
     setState(() {
       _isDarkMode = !_isDarkMode;
     });
@@ -40,13 +53,11 @@ class _MyAppState extends State<MyApp> {
       title: "Demo App 101",
       debugShowCheckedModeBanner: false,
       theme: _isDarkMode ? AppTheme.darkTheme : AppTheme.lightTheme,
-      initialRoute: "/login",
-      routes: {
-        "/": (context) => HomeScreen(isDarkMode: _isDarkMode, onToggleTheme: _toggleTheme),
-        "/login": (context) => LoginScreen(isDarkMode: _isDarkMode, onToggleTheme: _toggleTheme),
-        "/profile": (context) => ProfileScreen(isDarkMode: _isDarkMode, onToggleTheme: _toggleTheme),
-        "/settings": (context) => SettingsScreen(isDarkMode: _isDarkMode, onToggleTheme: _toggleTheme),
-      },
+      initialRoute: AppRoutes.login,
+      routes: AppRoutes.getRoutes(
+        isDarkMode: _isDarkMode,
+        onToggleTheme: _toggleTheme,
+      ),
     );
   }
 }

@@ -1,5 +1,7 @@
 import "package:flutter/material.dart";
+
 import "theme_toggle.dart";
+import "../services/auth_service.dart";
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -15,12 +17,31 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.actions,
   });
 
+  void _logout(BuildContext context) {
+    AuthService().logout();
+    Navigator.of(context).pushReplacementNamed("/login");
+  }
+
+  void _openDrawer(BuildContext context) {
+    Scaffold.of(context).openDrawer();
+  }
+
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      leading: IconButton(
+        icon: const Icon(Icons.menu),
+        onPressed: () => _openDrawer(context),
+        tooltip: "Menu",
+      ),
       title: Text(title),
       actions: [
         ...?actions,
+        IconButton(
+          icon: const Icon(Icons.logout),
+          onPressed: () => _logout(context),
+          tooltip: "Logout",
+        ),
         ThemeToggle(isDark: isDarkMode, onToggle: onToggleTheme),
       ],
     );

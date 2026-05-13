@@ -1,4 +1,4 @@
-import "package:demo_app_101/utils/http_client.dart";
+import "../utils/http_client.dart";
 
 class ApiService {
   final _http = HttpClient();

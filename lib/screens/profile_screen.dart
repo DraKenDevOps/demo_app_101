@@ -1,26 +1,15 @@
 import "package:flutter/material.dart";
 
-import "../widgets/app_bar.dart";
-
 class ProfileScreen extends StatelessWidget {
-  final bool isDarkMode;
-  final VoidCallback onToggleTheme;
-
-  const ProfileScreen({
-    super.key,
-    required this.isDarkMode,
-    required this.onToggleTheme,
-  });
+  // final bool isDarkMode;
+  // final VoidCallback onToggleTheme;
+  // const HomeScreen({super.key, required this.isDarkMode, required this.onToggleTheme});
+  const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: CustomAppBar(
-        title: "Profile",
-        isDarkMode: isDarkMode,
-        onToggleTheme: onToggleTheme,
-      ),
-      body: const Center(
+    return const Scaffold(
+      body: Center(
         child: Text("Profile Screen"),
       ),
     );

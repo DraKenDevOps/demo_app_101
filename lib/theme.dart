@@ -107,6 +107,7 @@ class AppTheme {
         elevation: 0,
         centerTitle: true,
       ),
+      // bottomAppBarTheme: BottomAppBarTheme(),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: primaryColor,

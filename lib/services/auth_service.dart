@@ -1,4 +1,5 @@
-import "package:demo_app_101/utils/http_client.dart";
+import "../utils/http_client.dart";
+import "./storage_service.dart";
 
 class AuthService {
   final _http = HttpClient();
@@ -9,5 +10,9 @@ class AuthService {
     } catch (err) {
       rethrow;
     }
+  }
+
+  void logout() {
+    StorageService.deleteToken();
   }
 }
