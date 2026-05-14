@@ -209,8 +209,6 @@ class HttpException implements Exception {
 }
 
 String normalizeEndpoint(String endpoint) {
-  if (!endpoint.startsWith("/")) {
-    endpoint = "/$endpoint";
-  }
+  if (!endpoint.startsWith("/")) endpoint = "/$endpoint";
   return endpoint;
 }

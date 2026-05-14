@@ -7,10 +7,11 @@ import "services/storage_service.dart";
 import "routes.dart";
 
 void main() async {
-  HttpClient().initialize(baseUrl: AppConfig.API_BASE_URL);
+  HttpClient http = HttpClient();
+  http.initialize(baseUrl: AppConfig.API_BASE_URL);
   String? token = await StorageService.getToken();
   if (token != null && token.isNotEmpty) {
-    HttpClient().addHeader("Authorization", "Bearer $token");
+    http.addHeader("Authorization", "Bearer $token");
   }
   runApp(const MyApp());
 }

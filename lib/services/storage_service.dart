@@ -3,6 +3,7 @@ import "package:flutter/foundation.dart";
 import "package:flutter_secure_storage/flutter_secure_storage.dart";
 
 import "../config.dart";
+import "../models/user_model.dart";
 
 class StorageService {
   static const _secureStorage = FlutterSecureStorage();
@@ -106,10 +107,27 @@ class StorageService {
   static void viewStorage() {
     if (kDebugMode) {
       StorageService.getAllData().then((values) {
+        debugPrint("=" * 100);
+        debugPrint("Secure Storage");
+        debugPrint("-" * 100);
         values.forEach((key, value) {
           debugPrint("Key: $key, Value: $value");
         });
+        debugPrint("=" * 100);
       });
+    }
+  }
+
+  static Future<UserModel?> getUser() async {
+    try {
+      final userData = await _secureStorage.read(key: AppConfig.USER_KEY);
+      if (userData != null) {
+        return UserModel.fromJson(json.decode(userData));
+      }
+      return null;
+    } catch (e) {
+      if (kDebugMode) debugPrint("✗ Error get user: $e");
+      return null;
     }
   }
 }
