@@ -1,72 +1,138 @@
-import "dart:convert";
+// import "dart:convert";
 import "user_model.dart";
 
-ApiReponse customResponseFromJson(String str) => ApiReponse.fromJson(json.decode(str));
+// ApiResponse customResponseFromJson(String str) => ApiResponse.fromJson(json.decode(str));
 
-String customResponseToJson(ApiReponse data) => json.encode(data.toJson());
+// String customResponseToJson(ApiResponse data) => json.encode(data.toJson());
 
-class ApiReponse {
-  String status;
-  List<dynamic>? items;
-  Item? item;
-  String? message;
-  String? accessToken;
-  int? expiresIn;
-  int? page;
-  int? perPage;
-  int? total;
-  int? totalPages;
-  List<dynamic>? data;
-  UserModel? user;
+class ApiResponse<T> {
+  final String status;
+  final T? data;
+  final String? message;
+  final String? accessToken;
+  final int? expiresIn;
+  final int? page;
+  final int? perPage;
+  final int? total;
+  final int? totalPages;
 
-  ApiReponse({
+  ApiResponse({
     required this.status,
-    required this.items,
-    required this.item,
-    required this.message,
-    required this.accessToken,
-    required this.expiresIn,
-    required this.page,
-    required this.perPage,
-    required this.total,
-    required this.totalPages,
-    required this.data,
-    required this.user,
+    this.data,
+    this.message,
+    this.accessToken,
+    this.expiresIn,
+    this.page,
+    this.perPage,
+    this.total,
+    this.totalPages,
   });
 
-  factory ApiReponse.fromJson(Map<String, dynamic> json) => ApiReponse(
-    status: json["status"],
-    items: List<dynamic>.from(json["items"].map((x) => x)),
-    item: Item.fromJson(json["item"]),
-    message: json["message"],
-    accessToken: json["accessToken"],
-    expiresIn: json["expiresIn"],
-    page: json["page"],
-    perPage: json["per_page"],
-    total: json["total"],
-    totalPages: json["total_pages"],
-    data: List<dynamic>.from(json["data"].map((x) => x)),
-    user: UserModel.fromJson(json["user"]),
-  );
+  bool get isSuccess => status == "success" || status == "ok";
+  bool get isError => status == "error";
+  bool get hasData => data != null;
+
+  factory ApiResponse.fromJson(Map<String, dynamic> json, {required T Function(dynamic) dataParser}) {
+    return ApiResponse<T>(
+      status: json["status"] ?? "unknown",
+      data: json["data"] != null ? dataParser(json["data"]) : null,
+      message: json["message"],
+      accessToken: json["accessToken"],
+      expiresIn: json["expiresIn"],
+      page: json["page"],
+      perPage: json["per_page"],
+      total: json["total"],
+      totalPages: json["total_pages"],
+    );
+  }
 
   Map<String, dynamic> toJson() => {
     "status": status,
-    "items": List<dynamic>.from(items!.map((x) => x)),
-    "item": item!.toJson(),
-    "message": message,
-    "accessToken": accessToken,
-    "expiresIn": expiresIn,
-    "page": page,
-    "per_page": perPage,
-    "total": total,
-    "total_pages": totalPages,
-    "data": List<dynamic>.from(data!.map((x) => x)),
-    "user": user!.toJson(),
+    if (data != null) "data": data,
+    if (message != null) "message": message,
+    if (accessToken != null) "accessToken": accessToken,
+    if (expiresIn != null) "expiresIn": expiresIn,
+    if (page != null) "page": page,
+    if (perPage != null) "per_page": perPage,
+    if (total != null) "total": total,
+    if (totalPages != null) "total_pages": totalPages,
   };
+
+  @override
+  String toString() => "ApiResponse(status: $status, hasData: $hasData)";
 }
 
-class Item {
-  Item();
-  factory Item.fromJson(Map<String, dynamic> json) => Item();
-  Map<String, dynamic> toJson() => {};
+class ListResponse<T> {
+  final String status;
+  final List<T> items;
+  final int? page;
+  final int? perPage;
+  final int? total;
+  final int? totalPages;
+  final String? message;
+
+  ListResponse({
+    required this.status,
+    required this.items,
+    this.page,
+    this.perPage,
+    this.total,
+    this.totalPages,
+    this.message,
+  });
+
+  bool get isSuccess => status == "success" || status == "ok";
+
+  factory ListResponse.fromJson(Map<String, dynamic> json, {required T Function(dynamic) itemParser}) {
+    final items = json["items"] ?? json["data"] ?? [];
+    return ListResponse<T>(
+      status: json["status"] ?? "unknown",
+      items: List<T>.from(items.map((x) => itemParser(x))),
+      page: json["page"],
+      perPage: json["per_page"],
+      total: json["total"],
+      totalPages: json["total_pages"],
+      message: json["message"],
+    );
+  }
+}
+
+class SingleResponse<T> {
+  final String status;
+  final T? data;
+  final String? message;
+
+  SingleResponse({required this.status, this.data, this.message});
+
+  bool get isSuccess => status == "success" || status == "ok";
+
+  factory SingleResponse.fromJson(Map<String, dynamic> json, {required T Function(dynamic) dataParser}) {
+    return SingleResponse<T>(
+      status: json["status"] ?? "unknown",
+      data: json["data"] != null ? dataParser(json["data"]) : null,
+      message: json["message"],
+    );
+  }
+}
+
+class AuthResponse {
+  final String status;
+  final String? accessToken;
+  final int? expiresIn;
+  final UserModel? user;
+  final String? message;
+
+  AuthResponse({required this.status, this.accessToken, this.expiresIn, this.user, this.message});
+
+  bool get isSuccess => status == "success" || status == "ok";
+
+  factory AuthResponse.fromJson(Map<String, dynamic> json) {
+    return AuthResponse(
+      status: json["status"] ?? "unknown",
+      accessToken: json["accessToken"],
+      expiresIn: json["expiresIn"],
+      user: json["user"] != null ? UserModel.fromJson(json["user"]) : null,
+      message: json["message"],
+    );
+  }
 }

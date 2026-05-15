@@ -12,7 +12,7 @@ class StorageService {
     try {
       String value = "";
       if (data is! String) value = data.toString();
-      if (data is Object) value = json.encode(data);
+      if (data is Object || data is Map<String, dynamic>) value = json.encode(data);
       await _secureStorage.write(key: key, value: value);
       viewStorage();
     } catch (e) {
