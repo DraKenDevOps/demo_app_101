@@ -108,7 +108,7 @@ class AppTheme {
         elevation: 0,
         centerTitle: true,
       ),
-      bottomNavigationBarTheme: BottomNavigationBarThemeData(selectedItemColor: surfaceColor),
+      bottomNavigationBarTheme: BottomNavigationBarThemeData(selectedItemColor: primaryColor),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: primaryColor,

@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:flutter_dotenv/flutter_dotenv.dart";
 
 import "theme.dart";
 import "config.dart";
@@ -7,12 +8,13 @@ import "services/storage_service.dart";
 import "routes.dart";
 
 void main() async {
+  await dotenv.load(fileName: ".env");
+  
   HttpClient http = HttpClient();
-  http.initialize(baseUrl: AppConfig.API_BASE_URL);
+  http.initialize(baseUrl: AppConfig.API_BASE_URL_V1);
   String? token = await StorageService.getToken();
-  if (token != null && token.isNotEmpty) {
-    http.addHeader("Authorization", "Bearer $token");
-  }
+  if (token != null && token.isNotEmpty) http.addHeader("Authorization", "Bearer $token");
+  AppConfig.printAllEnv();
   runApp(const MyApp());
 }
 
@@ -51,7 +53,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: "Demo App 101",
+      title: AppConfig.APP_NAME,
       debugShowCheckedModeBanner: false,
       theme: _isDarkMode ? AppTheme.darkTheme : AppTheme.lightTheme,
       initialRoute: AppRoutes.login,

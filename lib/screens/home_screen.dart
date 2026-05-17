@@ -1,3 +1,5 @@
+// import "package:flutter/foundation.dart";
+import "package:demo_app_101/screens/detail_screen.dart";
 import "package:flutter/material.dart";
 import "../models/travel_site.dart";
 import "../services/api_service.dart";
@@ -28,6 +30,12 @@ class _HomeScreen extends State<HomeScreen> {
     }
   }
 
+  // void _viewDetail(int id) {
+  //   if (kDebugMode) {
+  //     print("tab id $id");
+  //   }
+  // }
+
   @override
   Widget build(BuildContext context) {
     List<TravelSite> travelSites = _travelSites;
@@ -41,25 +49,28 @@ class _HomeScreen extends State<HomeScreen> {
           itemBuilder: (context, index) {
             final site = travelSites[index];
             return Card(
-              margin: EdgeInsets.all(8),
+              margin: EdgeInsets.fromLTRB(16,8,16,8),
+              elevation: .5,
               child: ListTile(
                 leading: Container(
-                  width: 60,
-                  height: 60,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    image: DecorationImage(image: NetworkImage(site.coverimage), fit: BoxFit.cover),
+                  width: MediaQuery.of(context).size.width * 0.2,
+                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
+                  child: Image.network(
+                    site.coverimage,
+                    fit: BoxFit.cover,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return CircularProgressIndicator();
+                    },
+                    webHtmlElementStrategy: WebHtmlElementStrategy.prefer,
+                    errorBuilder: (context, error, stackTrace) => const Icon(Icons.image, size: 60),
                   ),
                 ),
                 title: Text(site.name),
-                subtitle: Text(site.detail),
-                // trailing: Row(
-                //   mainAxisSize: MainAxisSize.min,
-                //   children: [
-                //     const Icon(Icons.star, color: Colors.amber, size: 16),
-                //     Text(site.rating.toString()),
-                //   ],
-                // ),
+                subtitle: Text(site.detail, overflow: TextOverflow.ellipsis, maxLines: 2, softWrap: false),
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => DetailScreen(id: site.id)));
+                },
               ),
             );
           },

@@ -62,6 +62,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     if (loadingProgress == null) return child;
                     return CircularProgressIndicator();
                   },
+                  webHtmlElementStrategy: WebHtmlElementStrategy.fallback,
                   errorBuilder: (context, error, stackTrace) => const Icon(Icons.person, size: 60),
                 ),
               ),

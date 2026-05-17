@@ -27,13 +27,12 @@ class _LoginScreenState extends State<LoginScreen> {
       Map<String, dynamic> formData = {
         "username": _usernameController.text,
         "password": _passwordController.text,
-        "expiresIn": 60000,
       };
 
       Map<String, dynamic> response = await auth.login(formData);
-      if (response["status"] == "success" || response["status"] == "ok") {
-        await StorageService.saveAccessToken(response["accessToken"]);
-        await StorageService.saveData("user_data", response["user"]);
+      if (response["status"] == "SUCCESS") {
+        await StorageService.saveAccessToken(response["access_token"]);
+        // await StorageService.saveData("user_data", response["user"]);
         if (!mounted) return;
         Navigator.of(context).pushReplacementNamed("/");
       } else {
