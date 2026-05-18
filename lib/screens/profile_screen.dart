@@ -2,6 +2,7 @@
 import "package:flutter/material.dart";
 
 import "../utils/helpers.dart";
+import "../theme.dart";
 import "../models/user_model.dart";
 import "../services/storage_service.dart";
 
@@ -47,7 +48,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             Container(
               width: 120,
               height: 120,
-              decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.grey[300]),
+              decoration: BoxDecoration(shape: BoxShape.circle, color: AppTheme.backgroundColor),
               child: ClipOval(
                 // child: CachedNetworkImage(
                 //   imageUrl: user.avatar,
@@ -69,7 +70,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             const SizedBox(height: 16),
             Text(user.fullName, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-            Text("@${user.username}", style: TextStyle(fontSize: 16, color: Colors.grey[600])),
+            Text("@${user.username}", style: TextStyle(fontSize: 16, color: AppTheme.secondaryColor)),
             const SizedBox(height: 32),
             _buildInfoCard(context, "Email", user.email, Icons.email),
             // _buildInfoCard(context, "Username", user.username, Icons.person),

@@ -4,10 +4,10 @@ class AppTheme {
   static const Color primaryColor = Color(0xFF1B75BB);
   static const Color secondaryColor = Color(0xFF666666);
   static const Color backgroundColor = Color(0xFFF6F7F8);
-  static const Color surfaceColor = Colors.white;
   static const Color errorColor = Color(0xFFEF4444);
   static const Color textPrimary = Color(0xFF1F2937);
   static const Color textSecondary = Color(0xFF6B7280);
+  static const Color textGrey = Color(0xFFCCCCCC);
 
   static const Color darkerBackgroundColor = Color.fromARGB(255, 9, 13, 20);
   static const Color darkBackgroundColor = Color(0xFF111827);
@@ -15,6 +15,9 @@ class AppTheme {
   static const Color darkTextPrimary = Color(0xFFF9FAFB);
   static const Color darkTextSecondary = Color(0xFF9CA3AF);
   static const Color darkBorderColor = Color(0xFF374151);
+
+  static const Color surfaceColor = Colors.white;
+  static const Color blackColor = Colors.black;
 
   static ThemeData get lightTheme {
     return ThemeData(

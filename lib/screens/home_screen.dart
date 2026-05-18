@@ -1,6 +1,7 @@
 // import "package:flutter/foundation.dart";
-import "package:demo_app_101/screens/detail_screen.dart";
 import "package:flutter/material.dart";
+import "../screens/detail_screen.dart";
+import "../providers/travel_site.dart";
 import "../models/travel_site.dart";
 import "../services/api_service.dart";
 
@@ -12,7 +13,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreen extends State<HomeScreen> {
-  final List<TravelSite> _travelSites = TravelSite.mockItems;
+  final List<TravelSite> _travelSites = TravelSiteProvider.mockItems;
   final ApiService api = ApiService();
 
   @override

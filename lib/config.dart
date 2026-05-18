@@ -16,11 +16,12 @@ class AppConfig {
   static bool get ENABLE_LOGGING => dotenv.env["ENABLE_LOGGING"]?.toLowerCase() == "true";
   static int get REQUEST_TIMEOUT => int.tryParse(dotenv.env["REQUEST_TIMEOUT"] ?? "10") ?? 10;
 
-  static String get MODE {
-    if (BASE_URL.contains("localhost")) return "development";
-    if (BASE_URL.contains("staging")) return "staging";
-    return "production";
-  }
+  static String get MODE => dotenv.env["MODE"] ?? "";
+  // static String get MODE {
+  //   if (BASE_URL.contains("localhost")) return "development";
+  //   if (BASE_URL.contains("staging")) return "staging";
+  //   return "production";
+  // }
 
   static void printAllEnv() {
     if (kDebugMode) {
@@ -53,11 +54,12 @@ class EnvConfig {
   static bool get ENABLE_LOGGING => String.fromEnvironment("ENABLE_LOGGING").toLowerCase() == "true";
   static int? REQUEST_TIMEOUT = int.tryParse(String.fromEnvironment("REQUEST_TIMEOUT", defaultValue: "10"));
 
-  static String get MODE {
-    if (BASE_URL.contains("localhost")) return "development";
-    if (BASE_URL.contains("staging")) return "staging";
-    return "production";
-  }
+  static String get MODE => dotenv.env["MODE"] ?? "";
+  // static String get MODE {
+  //   if (BASE_URL.contains("localhost")) return "development";
+  //   if (BASE_URL.contains("staging")) return "staging";
+  //   return "production";
+  // }
 
   static void printAllEnv() {
     if (kDebugMode) {
