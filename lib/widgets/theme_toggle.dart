@@ -1,21 +1,17 @@
 import "package:flutter/material.dart";
 
-class ThemeToggle extends StatelessWidget {
-  final bool isDark;
-  final VoidCallback onToggle;
+import "../app_state.dart";
 
-  const ThemeToggle({
-    super.key,
-    required this.isDark,
-    required this.onToggle,
-  });
+class ThemeToggle extends StatelessWidget {
+  const ThemeToggle({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final appState = AppState.instance;
     return IconButton(
-      icon: Icon(isDark ? Icons.light_mode : Icons.dark_mode),
-      onPressed: onToggle,
-      tooltip: isDark ? "Switch to Light Mode" : "Switch to Dark Mode",
+      icon: Icon(appState.isDarkMode ? Icons.light_mode : Icons.dark_mode),
+      onPressed: appState.toggleTheme,
+      tooltip: appState.isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode",
     );
   }
 }

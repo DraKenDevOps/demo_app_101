@@ -1,14 +1,13 @@
 import "package:flutter/material.dart";
+import "package:go_router/go_router.dart";
 
+import "../app_state.dart";
 import "../services/storage_service.dart";
 import "../services/auth_service.dart";
 import "../widgets/theme_toggle.dart";
 
 class LoginScreen extends StatefulWidget {
-  final bool isDarkMode;
-  final VoidCallback onToggleTheme;
-
-  const LoginScreen({super.key, required this.isDarkMode, required this.onToggleTheme});
+  const LoginScreen({super.key});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -32,9 +31,9 @@ class _LoginScreenState extends State<LoginScreen> {
       Map<String, dynamic> response = await auth.login(formData);
       if (response["status"] == "SUCCESS") {
         await StorageService.saveAccessToken(response["access_token"]);
-        // await StorageService.saveData("user_data", response["user"]);
         if (!mounted) return;
-        Navigator.of(context).pushReplacementNamed("/");
+        AppState.instance.login();
+        context.go("/");
       } else {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(response["message"] ?? "Login failed")));
@@ -50,7 +49,7 @@ class _LoginScreenState extends State<LoginScreen> {
           Positioned(
             top: MediaQuery.of(context).padding.top + 8,
             right: 8,
-            child: ThemeToggle(isDark: widget.isDarkMode, onToggle: widget.onToggleTheme),
+            child: ThemeToggle(),
           ),
           Padding(
             padding: const EdgeInsets.all(24.0),
@@ -64,15 +63,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(height: 32),
                   TextFormField(
                     controller: _usernameController,
-                    // autofocus: true,
                     decoration: InputDecoration(
                       labelText: "Username",
-                      border: OutlineInputBorder(
-                        // borderRadius: BorderRadius.circular(24.0)
-                      ),
-                      // enabledBorder: OutlineInputBorder(
-                      //   borderRadius: BorderRadius.circular(24.0)
-                      // ),
+                      border: OutlineInputBorder(),
                       prefixIcon: Icon(Icons.person),
                     ),
                     validator: (value) {
@@ -88,12 +81,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     obscureText: _obscurePassword,
                     decoration: InputDecoration(
                       labelText: "Password",
-                      border: OutlineInputBorder(
-                        // borderRadius: BorderRadius.circular(24.0)
-                      ),
-                      // enabledBorder: OutlineInputBorder(
-                      //   borderRadius: BorderRadius.circular(24.0)
-                      // ),
+                      border: OutlineInputBorder(),
                       prefixIcon: const Icon(Icons.lock),
                       suffixIcon: IconButton(
                         icon: Icon(_obscurePassword ? Icons.visibility : Icons.visibility_off),

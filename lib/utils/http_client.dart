@@ -3,7 +3,6 @@ import "package:flutter/foundation.dart";
 import "package:http/http.dart" as http;
 import "dart:convert";
 import "dart:io";
-// import "../models/api_response.dart";
 
 class HttpClient {
   static final HttpClient _instance = HttpClient._internal();
@@ -67,13 +66,10 @@ class HttpClient {
 
       return _handleResponse(response);
     } on SocketException catch (e) {
-      // return ApiResponse(status: "ERROR", message: "Network error: No internet connection ${e.message}");
       return {"status": "ERROR", "message": "Network error: No internet connection ${e.message}"};
     } on TimeoutException catch (e) {
-      // return ApiResponse(status: "ERROR", message: "Request timeout ${e.duration}s ${e.message}");
       return {"status": "ERROR", "message": "Request timeout ${e.duration}s ${e.message}"};
     } catch (e) {
-      // return ApiResponse(status: "ERROR", message: "GET Error: $e");
       return {"status": "ERROR", "message": "GET Error: $e"};
     }
   }
@@ -88,13 +84,10 @@ class HttpClient {
 
       return _handleResponse(response);
     } on SocketException catch (e) {
-      // return ApiResponse(status: "ERROR", message: "Network error: No internet connection ${e.message}");
       return {"status": "ERROR", "message": "Network error: No internet connection ${e.message}"};
     } on TimeoutException catch (e) {
-      // return ApiResponse(status: "ERROR", message: "Request timeout ${e.duration}s ${e.message}");
       return {"status": "ERROR", "message": "Request timeout ${e.duration}s ${e.message}"};
     } catch (e) {
-      // return ApiResponse(status: "ERROR", message: "POST Error: $e");
       return {"status": "ERROR", "message": "POST Error: $e"};
     }
   }
@@ -109,13 +102,10 @@ class HttpClient {
 
       return _handleResponse(response);
     } on SocketException catch (e) {
-      // return ApiResponse(status: "ERROR", message: "Network error: No internet connection ${e.message}");
       return {"status": "ERROR", "message": "Network error: No internet connection ${e.message}"};
     } on TimeoutException catch (e) {
-      // return ApiResponse(status: "ERROR", message: "Request timeout ${e.duration}s ${e.message}");
       return {"status": "ERROR", "message": "Request timeout ${e.duration}s ${e.message}"};
     } catch (e) {
-      // return ApiResponse(status: "ERROR", message: "PUT Error: $e");
       return {"status": "ERROR", "message": "PUT Error: $e"};
     }
   }
@@ -134,13 +124,10 @@ class HttpClient {
 
       return _handleResponse(response);
     } on SocketException catch (e) {
-      // return ApiResponse(status: "ERROR", message: "Network error: No internet connection ${e.message}");
       return {"status": "ERROR", "message": "Network error: No internet connection ${e.message}"};
     } on TimeoutException catch (e) {
-      // return ApiResponse(status: "ERROR", message: "Request timeout ${e.duration}s ${e.message}");
       return {"status": "ERROR", "message": "Request timeout ${e.duration}s ${e.message}"};
     } catch (e) {
-      // return ApiResponse(status: "ERROR", message: "PATCH Error: $e");
       return {"status": "ERROR", "message": "PATCH Error: $e"};
     }
   }
@@ -155,52 +142,34 @@ class HttpClient {
 
       return _handleResponse(response);
     } on SocketException catch (e) {
-      // return ApiResponse(status: "ERROR", message: "Network error: No internet connection ${e.message}");
       return {"status": "ERROR", "message": "Network error: No internet connection ${e.message}"};
     } on TimeoutException catch (e) {
-      // return ApiResponse(status: "ERROR", message: "Request timeout ${e.duration}s ${e.message}");
       return {"status": "ERROR", "message": "Request timeout ${e.duration}s ${e.message}"};
     } catch (e) {
-      // return ApiResponse(status: "ERROR", message: "DELETE Error: $e");
       return {"status": "ERROR", "message": "DELETE Error: $e"};
     }
   }
 
-  // Map<String, dynamic> _handleResponse(http.Response response, {required T Function(dynamic) dataParser}) {
   Map<String, dynamic> _handleResponse(http.Response response) {
     try {
       if (kDebugMode) debugPrint("Http client handle response.body: ${response.body}");
       if (response.statusCode == 200 || response.statusCode == 201 || response.statusCode == 204) {
-        // if (response.body.isEmpty) {
-        //   return ApiResponse<T>(status: "SUCCESS", message: "");
-        // }
-        // final Map<String, dynamic> resDecode = jsonDecode(response.body);
-        // if (resDecode.containsKey("status")) {
-        //   return ApiResponse<T>.fromJson(resDecode, dataParser: dataParser);
-        // }
-        // return ApiResponse<T>(status: "SUCCESS", data: dataParser(resDecode));
         return jsonDecode(response.body);
       }
 
       if (response.statusCode == 401) {
-        // return ApiResponse<T>(status: "ERROR", message: "Unauthorized: Token expired or invalid");
         return {"status": "ERROR", "message": "Unauthorized: Token expired or invalid"};
       }
       if (response.statusCode == 403) {
-        // return ApiResponse<T>(status: "ERROR", message: "Unauthorized: Forbidden: Access denied");
         return {"status": "ERROR", "message": "Unauthorized: Forbidden: Access denied"};
       }
       if (response.statusCode == 404) {
-        // return ApiResponse<T>(status: "ERROR", message: "Not Found: Resource does not exist");
         return {"status": "ERROR", "message": "Not Found: Resource does not exist"};
       }
-      // if (response.statusCode >= 500) return ApiResponse<T>(status: "ERROR", message: "Server Error");
       if (response.statusCode >= 500) return {"status": "ERROR", "message": "Server Error"};
-      // return ApiResponse<T>(status: "ERROR", message: "HTTP Error ${response.statusCode}: ${response.body}");
       return {"status": "ERROR", "message": "HTTP Error ${response.statusCode}: ${response.body}"};
     } catch (e) {
       if (kDebugMode) debugPrint("❌ Error parsing response: $e");
-      // return ApiResponse<T>(status: "ERROR", message: "Failed to parse response: $e");
       return {"status": "ERROR", "message": "Failed to parse response: $e"};
     }
   }

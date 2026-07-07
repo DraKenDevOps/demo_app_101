@@ -1,11 +1,12 @@
 import "package:flutter/material.dart";
 import "package:flutter_dotenv/flutter_dotenv.dart";
 
+import "app_state.dart";
+import "router.dart";
 import "theme.dart";
 import "config.dart";
 import "utils/http_client.dart";
 import "services/storage_service.dart";
-import "routes.dart";
 
 void main() async {
   await dotenv.load(fileName: ".env");
@@ -15,55 +16,31 @@ void main() async {
   String? token = await StorageService.getToken();
   if (token != null && token.isNotEmpty) http.addHeader("Authorization", "Bearer $token");
   AppConfig.printAllEnv();
+
+  final appState = AppState.instance;
+  await appState.loadTheme();
+  appState.isAuthenticated = await StorageService.hasToken();
+
   runApp(const MyApp());
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  bool _isDarkMode = false;
-  ThemeMode _themeMode = ThemeMode.light;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadTheme();
-  }
-
-  Future<void> _loadTheme() async {
-    final theme = await StorageService.getData(AppConfig.APP_THEME_KEY);
-    if (mounted) {
-      setState(() {
-        _isDarkMode = theme == "dark";
-        _themeMode = theme == "dark" ? ThemeMode.dark : ThemeMode.light;
-      });
-    }
-  }
-
-  void _toggleTheme() {
-    StorageService.saveData(AppConfig.APP_THEME_KEY, _isDarkMode ? "dark" : "light");
-    setState(() {
-      _isDarkMode = !_isDarkMode;
-      _themeMode = _themeMode == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: AppConfig.APP_NAME,
-      debugShowCheckedModeBanner: false,
-      // theme: _isDarkMode ? AppTheme.darkTheme : AppTheme.lightTheme,
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      themeMode: _themeMode,
-      initialRoute: AppRoutes.login,
-      routes: AppRoutes.getRoutes(isDarkMode: _isDarkMode, onToggleTheme: _toggleTheme),
+    return ListenableBuilder(
+      listenable: AppState.instance,
+      builder: (context, _) {
+        return MaterialApp.router(
+          title: AppConfig.APP_NAME,
+          debugShowCheckedModeBanner: false,
+          theme: AppTheme.lightTheme,
+          darkTheme: AppTheme.darkTheme,
+          themeMode: AppState.instance.themeMode,
+          routerConfig: router,
+        );
+      },
     );
   }
 }

@@ -8,11 +8,6 @@ class AuthService {
     final response = await _http.post("/login", data, null);
     return response;
   }
-  // Future<ApiResponse> login(Map<String, dynamic> data) async {
-  //   ApiResponse response = await _http.post("/login", data, null);
-  //   return response;
-  // }
-
   void logout() {
     StorageService.deleteToken();
   }

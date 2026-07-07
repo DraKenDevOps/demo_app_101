@@ -1,8 +1,7 @@
-// import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
-import "../screens/detail_screen.dart";
-import "../providers/travel_site.dart";
+import "package:go_router/go_router.dart";
 import "../models/travel_site.dart";
+import "../providers/travel_site.dart";
 import "../services/api_service.dart";
 
 class HomeScreen extends StatefulWidget {
@@ -23,25 +22,13 @@ class _HomeScreen extends State<HomeScreen> {
   }
 
   void _loadTravelSite() async {
-    if (mounted) {
-      // final response = await api.listTravelSite("", null, null, null, null);
-      // if (response.status == "success") {
-      //   if (response.items != null && response.items!.isNotEmpty) _travelSites = response.items! as List<TravelSite>;
-      // }
-    }
+    if (mounted) {}
   }
-
-  // void _viewDetail(int id) {
-  //   if (kDebugMode) {
-  //     print("tab id $id");
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
     List<TravelSite> travelSites = _travelSites;
     return Scaffold(
-      // body: Center(child: Text("Home Screen", style: TextStyle(fontSize: 24))),
       body: SingleChildScrollView(
         child: ListView.builder(
           shrinkWrap: true,
@@ -70,7 +57,7 @@ class _HomeScreen extends State<HomeScreen> {
                 title: Text(site.name),
                 subtitle: Text(site.detail, overflow: TextOverflow.ellipsis, maxLines: 2, softWrap: false),
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => DetailScreen(id: site.id)));
+                  context.push("/detail/${site.id}");
                 },
               ),
             );
